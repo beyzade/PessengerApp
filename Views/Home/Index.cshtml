@@ -1,0 +1,116 @@
+﻿@model List<PessengerApp.Models.Pessenger>
+
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+    <div class="form-group">
+        <label>Search Option</label>
+        <select class="form-control" id="OptionType" name="OptionType" asp-items="@ViewBag.OptionTypes"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Option Value</label>
+        <select class="form-control" id="OptionValue" name="OptionValue"></select>
+    </div>
+
+    <input type="submit" name="submit" value="Search" />
+}
+
+<div class="row">
+    <div class="col-6">
+        <h4>Total Pessengers = @ViewBag.TotalRows</h4>
+    </div>
+</div>
+
+
+
+<table class="table table-bordered table-condensed" id="dataTable">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Status</th>
+            <th>Country</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Gender</th>
+            <th>Document Type</th>
+            <th>Document No</th>
+            <th>Issue Date</th>
+            <th colspan="2">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+        <tr>
+            <td>@e.Id</td>
+            <td>@e.Status</td>
+            <td>@e.Country</td>
+            <td>@e.Name</td>
+            <td>@e.Surname</td>
+            <td>@e.Gender</td>
+            <td>@e.DocumentType</td>
+            <td>@e.DocumentNo</td>
+            <td>@e.IssueDate.ToString("MM-dd-yyyy")</td>
+            <td>
+                <a asp-action="Edit"
+                   asp-route-id="@e.Id"
+                   asp-route-currentPage="@(ViewBag.NextPage - 1)"
+                   class="btn btn-outline-primary">Edit</a>
+
+                <a asp-action="Delete"
+                   asp-route-id="@e.Id"
+                   asp-route-currentPage="@(ViewBag.NextPage - 1)"
+                   class="btn btn-outline-danger"
+                   onclick="return confirm('Are you sure to remove this record?')">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<a asp-action="New" class="btn btn-outline-primary">New</a>
+<hr />
+
+<div class="row">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a name="firstpage" id="firstpage" @Url.Action("Index", "Home") class="page-link" onclick="setRouteParameters(this.href, 0);">First</a></li>
+            <li class="page-item"><a name="nextpage" id="nextpage" @Url.Action("Index", "Home") class="page-link" onclick="setRouteParameters(this.href, @ViewBag.NextPage);">Next</a></li>
+            <li class="page-item"><a name="previouspage" id="previouspage" @Url.Action("Index", "Home") class="page-link" onclick="setRouteParameters(this.href, @ViewBag.PreviousPage);">Previous</a></li>
+            <li class="page-item"><a name="lastpage" id="lastpage" @Url.Action("Index", "Home") class="page-link" onclick="setRouteParameters(this.href, @ViewBag.LastPage);">Last</a></li>
+        </ul>
+    </nav>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        function setRouteParameters(target, pageNo) {
+            window.location.href = target + '?startPage=' + pageNo + '&optionType=' + $('#OptionType').val() + '&optionValue=' + $('#OptionValue').val();
+        }
+
+        $(document).ready(function () {
+            $('#OptionType').val(@ViewBag.OptionType);
+            showValue(@ViewBag.OptionType, @ViewBag.OptionValue);
+
+            $(function () {
+                $('#OptionType').change(function () {
+                    showValue($('#OptionType').val());
+                })
+            });
+
+            function showValue(optionType, optionValue) {
+                $.getJSON('@Url.Action("GetOptionValues", "Home")' + "?value=" + optionType, function (result) {
+                    $("#OptionValue").html("");
+                    for (var key in result) {
+                        $("#OptionValue").append("<option value="+ key + ">" + result[key] + "</option>")
+                    }
+                    if (optionValue) {
+                        $('#OptionValue').val(optionValue);
+                    }
+
+                })
+            }
+        });
+    </script>
+}	

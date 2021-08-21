@@ -1,0 +1,53 @@
+@model PessengerApp.Models.Pessenger
+
+<h2>Editing Pessenger with Id: @Model.Id</h2>
+
+<form asp-action="Edit" method="Post">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" id="currentPage" name="currentPage" value="@ViewBag.CurrentPage" />
+    <div class="form-group">
+        <label asp-for="@Model.Status"></label>
+        <select class="form-control" asp-for="@Model.Status"
+                asp-items="@ViewBag.Statuses"></select>
+        <span class="text-danger" asp-validation-for="@Model.Status"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Country"></label>
+        <select class="form-control" asp-for="@Model.Country"
+                asp-items="@ViewBag.Countries"></select>
+        <span class="text-danger" asp-validation-for="@Model.Country"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Name"></label>
+        <input asp-for="@Model.Name" class="form-control" />
+        <span class="text-danger" asp-validation-for="@Model.Name"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Surname"></label>
+        <input asp-for="@Model.Surname" class="form-control" />
+        <span class="text-danger" asp-validation-for="@Model.Surname"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Gender"></label>
+        <select class="form-control" asp-for="@Model.Gender"
+                asp-items="@ViewBag.Genders"></select>
+        <span class="text-danger" asp-validation-for="@Model.Gender"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.DocumentType"></label>
+        <select class="form-control" asp-for="@Model.DocumentType"
+                asp-items="@ViewBag.DocumentTypes"></select>
+        <span class="text-danger" asp-validation-for="@Model.DocumentType"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.DocumentNo"></label>
+        <input asp-for="@Model.DocumentNo" class="form-control" />
+        <span class="text-danger" asp-validation-for="@Model.DocumentNo"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.IssueDate"></label>
+        <input asp-for="@Model.IssueDate" class="form-control"/>
+        <span class="text-danger" asp-validation-for="@Model.IssueDate"></span>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Save" />
+</form>
